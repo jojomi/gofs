@@ -10,9 +10,10 @@ import (
 
 func TestFile(t *testing.T) {
 	a := assert.New(t)
+	fs := afero.NewMemMapFs()
 
 	f := FileAt("/tmp/testfile.log")
-	f.fs = afero.NewMemMapFs()
+	f.fs = fs
 	parentDir := DirAt("/tmp")
 	testContent := "go test\nanother line"
 
@@ -63,6 +64,14 @@ func TestFile(t *testing.T) {
 	a.Equal([]byte(testContent+extraContent+"\n"), f.MustContent())
 	a.Equal(testContent+extraContent+"\n", f.MustContentString())
 
+	// test io
+	fCopy := FileAt("/tmp/copy")
+	fCopy.fs = fs
+	err = f.CopyTo(fCopy)
+	a.Nil(err)
+	a.True(fCopy.Exists())
+	a.Equal(f.MustContentString(), fCopy.MustContentString())
+
 	// test hashing
 	expectedMD5Hash := "9656e885da2a0510f480c5ff8a6a57b5"
 	a.Equal(expectedMD5Hash, f.MustMd5Hash())
@@ -70,7 +79,7 @@ func TestFile(t *testing.T) {
 
 	// test template
 	outFile := FileAt("/tmp/template.out")
-	outFile.fs = afero.NewMemMapFs()
+	outFile.fs = fs
 	err = f.SetContentString("")
 	a.Nil(err)
 	err = f.AssertEmpty().AppendString("{{ .Name }} was here")
