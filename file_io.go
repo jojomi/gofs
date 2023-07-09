@@ -58,13 +58,13 @@ func (x File) MustContent() []byte {
 	return content
 }
 
-func (x File) StringContent() (string, error) {
+func (x File) ContentString() (string, error) {
 	content, err := afero.ReadFile(x.fs, x.Path())
 	return string(content), err
 }
 
-func (x File) MustStringContent() string {
-	content, err := x.StringContent()
+func (x File) MustContentString() string {
+	content, err := x.ContentString()
 	if err != nil {
 		panic(errors.Annotatef(err, "could not read content of %s", x))
 	}

@@ -50,7 +50,7 @@ func TestFile(t *testing.T) {
 	a.Equal(byteContent, b)
 
 	// read content (string)
-	c, err := f.StringContent()
+	c, err := f.ContentString()
 	a.Nil(err)
 	a.Equal(testContent, c)
 
