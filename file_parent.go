@@ -9,6 +9,10 @@ func (x File) Dir() Dir {
 	return DirAt(path.Dir(x.path))
 }
 
+func (x File) ParentDir() Dir {
+	return x.Dir()
+}
+
 func (x File) EnsureDir(perm os.FileMode) error {
 	dir := x.Dir()
 	return dir.Ensure(perm)
