@@ -103,6 +103,18 @@ func (x File) SetContentString(newContent string) error {
 	return x.SetContent([]byte(newContent))
 }
 
+func (x File) Clear() error {
+	return x.SetContentString("")
+}
+
+func (x File) MustClear() File {
+	err := x.Clear()
+	if err != nil {
+		panic(err)
+	}
+	return x
+}
+
 func (x File) Remove() error {
 	if x.NotExists() {
 		return nil
