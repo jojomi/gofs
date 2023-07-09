@@ -3,7 +3,9 @@ package gofs
 import (
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
+	"text/template"
 )
 
 func TestFile(t *testing.T) {
@@ -59,10 +61,41 @@ func TestFile(t *testing.T) {
 	a.Nil(err)
 
 	a.Equal([]byte(testContent+extraContent+"\n"), f.MustContent())
-	a.Equal(testContent+extraContent+"\n", f.MustStringContent())
+	a.Equal(testContent+extraContent+"\n", f.MustContentString())
 
 	// test hashing
 	expectedMD5Hash := "9656e885da2a0510f480c5ff8a6a57b5"
 	a.Equal(expectedMD5Hash, f.MustMd5Hash())
 	f.AssertMd5Hash(expectedMD5Hash)
+
+	// test template
+	outFile := FileAt("/tmp/template.out")
+	outFile.fs = afero.NewMemMapFs()
+	err = f.SetContentString("")
+	a.Nil(err)
+	err = f.AssertEmpty().AppendString("{{ .Name }} was here")
+	a.Nil(err)
+	err = f.MustRenderer().WithData(map[string]string{
+		"Name": "John",
+	}).RenderToFile(outFile)
+	a.Nil(err)
+	c, err = outFile.ContentString()
+	a.True(outFile.Exists())
+	a.False(outFile.IsEmpty())
+	a.Nil(err)
+	a.Equal("John was here", c)
+
+	// template with custom funcs
+	err = f.MustClear().AppendString("{{ .Name | toLower | toUpper }} was here")
+	a.Nil(err)
+	var buf strings.Builder
+	err = f.MustRenderer().WithData(map[string]string{
+		"Name": "Tom",
+	}).AddFuncs(template.FuncMap{
+		"toUpper": strings.ToUpper,
+	}).AddFuncs(template.FuncMap{
+		"toLower": strings.ToLower,
+	}).RenderTo(&buf)
+	a.Nil(err)
+	a.Equal("TOM was here", buf.String())
 }

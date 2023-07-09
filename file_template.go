@@ -1,7 +1,13 @@
 package gofs
 
-// tplfuncs might be useful here or sprig
-func (x File) AsTemplate(data any, outputFile File) error {
-	// TODO implement File->AsTemplate
-	return nil
+func (x File) Renderer() (*Renderer, error) {
+	return NewRendererFromFile(x)
+}
+
+func (x File) MustRenderer() *Renderer {
+	renderer, err := x.Renderer()
+	if err != nil {
+		panic(err)
+	}
+	return renderer
 }
