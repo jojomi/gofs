@@ -129,3 +129,7 @@ func (x File) MustRemove() File {
 	}
 	return x
 }
+
+func (x File) Writer() (io.WriteCloser, error) {
+	return x.fs.Create(x.path)
+}
