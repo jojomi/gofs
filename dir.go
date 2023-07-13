@@ -22,6 +22,10 @@ func DirAt(path string) Dir {
 	return dirAtWithFs(path, afero.NewOsFs())
 }
 
+func WorkingDir() Dir {
+	return DirAt("")
+}
+
 func dirAtWithFs(path string, fs afero.Fs) Dir {
 	// replace home dir path
 	path, _ = homedir.Expand(path)
