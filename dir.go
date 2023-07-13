@@ -2,6 +2,7 @@ package gofs
 
 import (
 	"fmt"
+	"github.com/pkg/browser"
 	"github.com/spf13/afero"
 	"os"
 	"path"
@@ -274,4 +275,8 @@ func removeContents(dir string) error {
 		}
 	}
 	return nil
+}
+
+func (x Dir) OpenStandard() error {
+	return browser.OpenFile(x.Path())
 }
