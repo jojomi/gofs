@@ -28,6 +28,10 @@ func fileWithSameFs(filePath string, f File) File {
 	return fileAtWithFs(filePath, f.fs)
 }
 
+func FileWithFs(filePath string, fs afero.Fs) File {
+	return fileAtWithFs(filePath, fs)
+}
+
 func fileAtWithFs(filePath string, fs afero.Fs) File {
 	// replace home dir path
 	filePath, err := homedir.Expand(filePath)
