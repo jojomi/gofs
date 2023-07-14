@@ -21,18 +21,14 @@ type File struct {
 }
 
 func FileAt(filePath string) File {
-	return fileAtWithFs(filePath, afero.NewOsFs())
+	return FileWithFs(filePath, afero.NewOsFs())
 }
 
 func fileWithSameFs(filePath string, f File) File {
-	return fileAtWithFs(filePath, f.fs)
+	return FileWithFs(filePath, f.fs)
 }
 
 func FileWithFs(filePath string, fs afero.Fs) File {
-	return fileAtWithFs(filePath, fs)
-}
-
-func fileAtWithFs(filePath string, fs afero.Fs) File {
 	// replace home dir path
 	filePath, err := homedir.Expand(filePath)
 	if err != nil {
@@ -115,7 +111,7 @@ func (x File) Filename() string {
 }
 
 func (x File) WithoutExtension() File {
-	return fileAtWithFs(strings.TrimRight(x.path, path.Ext(x.path)), x.fs)
+	return FileWithFs(strings.TrimRight(x.path, path.Ext(x.path)), x.fs)
 }
 
 func (x File) OpenStandard() error {

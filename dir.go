@@ -19,14 +19,14 @@ type Dir struct {
 }
 
 func DirAt(path string) Dir {
-	return dirAtWithFs(path, afero.NewOsFs())
+	return DirWithFs(path, afero.NewOsFs())
 }
 
 func WorkingDir() Dir {
 	return DirAt("")
 }
 
-func dirAtWithFs(path string, fs afero.Fs) Dir {
+func DirWithFs(path string, fs afero.Fs) Dir {
 	// replace home dir path
 	path, _ = homedir.Expand(path)
 
@@ -168,7 +168,7 @@ func (x Dir) Path() string {
 }
 
 func (x Dir) Parent() Dir {
-	return dirAtWithFs(path.Dir(x.path), x.fs)
+	return DirWithFs(path.Dir(x.path), x.fs)
 }
 
 func (x Dir) RelativeTo(dir Dir) string {
@@ -192,7 +192,7 @@ func (x Dir) FileAt(relativePath string) (File, error) {
 		return File{}, NewFilePathNotRelativeError(relativePath)
 	}
 
-	return fileAtWithFs(filepath.Join(x.path, relativePath), x.fs), nil
+	return FileWithFs(filepath.Join(x.path, relativePath), x.fs), nil
 }
 
 func (x Dir) MustDirAt(relativePath string) Dir {
@@ -208,7 +208,7 @@ func (x Dir) DirAt(relativePath string) (Dir, error) {
 		return Dir{fs: x.fs}, NewDirPathNotRelativeError(relativePath)
 	}
 
-	return dirAtWithFs(filepath.Join(x.path, relativePath), x.fs), nil
+	return DirWithFs(filepath.Join(x.path, relativePath), x.fs), nil
 }
 
 func (x Dir) Remove() error {
