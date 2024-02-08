@@ -32,3 +32,15 @@ func (x File) WithExtension(fileExtension FileExtension) File {
 
 	return x.Dir().MustFileAt(newFilename)
 }
+
+func (x File) Extension() *FileExtension {
+	if !x.HasAnyExtension() {
+		return nil
+	}
+
+	r := regexp.MustCompile(`(\.tar)?\.[^.]+$`)
+	extension := r.FindString(x.Filename())
+
+	result := FileExtensionFrom(extension)
+	return &result
+}
