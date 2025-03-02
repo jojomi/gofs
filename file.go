@@ -24,6 +24,11 @@ func FileAt(filePath string) File {
 	return FileWithFs(filePath, afero.NewOsFs())
 }
 
+func FileAtDir(dir Dir, filename string) File {
+	filePath := filepath.Join(dir.Path(), filename)
+	return FileWithFs(filePath, afero.NewOsFs())
+}
+
 func fileWithSameFs(filePath string, f File) File {
 	return FileWithFs(filePath, f.fs)
 }
