@@ -108,3 +108,23 @@ func TestFile(t *testing.T) {
 	a.Nil(err)
 	a.Equal("TOM was here", buf.String())
 }
+
+func TestFileAtDir(t *testing.T) {
+	a := assert.New(t)
+	fs := afero.NewMemMapFs()
+
+	f := FileAtDir(DirAt("/tmp/"), "testfile.log")
+	f.fs = fs
+
+	a.Equal("/tmp/testfile.log", f.Path())
+}
+
+func TestWithFilename(t *testing.T) {
+	a := assert.New(t)
+	fs := afero.NewMemMapFs()
+
+	f := FileAt("/tmp/testfile.log")
+	f.fs = fs
+
+	a.Equal("/tmp/out.pdf", f.WithFilename("out.pdf").Path())
+}

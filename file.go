@@ -123,6 +123,10 @@ func (x File) WithoutExtension() File {
 	return FileWithFs(strings.TrimRight(x.path, path.Ext(x.path)), x.fs)
 }
 
+func (x File) WithFilename(filename string) File {
+	return FileWithFs(filepath.Join(x.Dir().Path(), filename), x.fs)
+}
+
 func (x File) OpenStandard() error {
 	return browser.OpenFile(x.Path())
 }
