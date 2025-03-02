@@ -138,3 +138,13 @@ func TestInDir(t *testing.T) {
 
 	a.Equal("/run/testfile.log", f.InDir(DirAt("/run/")).Path())
 }
+
+func TestWithoutExtension(t *testing.T) {
+	a := assert.New(t)
+	fs := afero.NewMemMapFs()
+
+	f := FileAt("/tmp/testfile.exe")
+	f.fs = fs
+
+	a.Equal("testfile", f.WithoutExtension().Filename())
+}

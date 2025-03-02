@@ -116,11 +116,11 @@ func (x File) Filename() string {
 }
 
 func (x File) FilenameWithoutExtension() string {
-	return strings.TrimRight(x.Filename(), path.Ext(x.path))
+	return x.WithoutExtension().Filename()
 }
 
 func (x File) WithoutExtension() File {
-	return FileWithFs(strings.TrimRight(x.path, path.Ext(x.path)), x.fs)
+	return FileWithFs(strings.TrimSuffix(x.path, path.Ext(x.path)), x.fs)
 }
 
 func (x File) WithFilename(filename string) File {
