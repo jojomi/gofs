@@ -127,6 +127,10 @@ func (x File) WithFilename(filename string) File {
 	return FileWithFs(filepath.Join(x.Dir().Path(), filename), x.fs)
 }
 
+func (x File) InDir(dir Dir) File {
+	return FileWithFs(filepath.Join(dir.Path(), x.Filename()), x.fs)
+}
+
 func (x File) OpenStandard() error {
 	return browser.OpenFile(x.Path())
 }

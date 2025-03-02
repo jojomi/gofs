@@ -128,3 +128,13 @@ func TestWithFilename(t *testing.T) {
 
 	a.Equal("/tmp/out.pdf", f.WithFilename("out.pdf").Path())
 }
+
+func TestInDir(t *testing.T) {
+	a := assert.New(t)
+	fs := afero.NewMemMapFs()
+
+	f := FileAt("/tmp/testfile.log")
+	f.fs = fs
+
+	a.Equal("/run/testfile.log", f.InDir(DirAt("/run/")).Path())
+}
