@@ -5,6 +5,10 @@ import (
 	"io"
 )
 
+func (x File) CopyToDir(target Dir) error {
+	return x.CopyTo(x.InDir(target))
+}
+
 func (x File) CopyTo(target File) error {
 	// Open the source file
 	src, err := x.fs.Open(x.path)
