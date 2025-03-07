@@ -167,6 +167,11 @@ func (x Dir) Path() string {
 	return x.path
 }
 
+// Name returns the last path element.
+func (x Dir) Name() string {
+	return filepath.Base(x.Path())
+}
+
 func (x Dir) Parent() Dir {
 	return DirWithFs(path.Dir(x.path), x.fs)
 }

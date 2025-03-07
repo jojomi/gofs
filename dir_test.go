@@ -13,6 +13,8 @@ func TestDir(t *testing.T) {
 	d.fs = afero.NewMemMapFs()
 	parentDir := DirAt("/tmp")
 
+	a.Equal("testdir", d.Name())
+
 	// test non existing dir
 	a.False(d.Exists())
 	a.True(d.NotExists())
