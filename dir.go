@@ -145,6 +145,22 @@ func (x Dir) ReadDir() ([]os.FileInfo, error) {
 	return afero.ReadDir(x.fs, x.Path())
 }
 
+func (x Dir) Files() ([]File, error) {
+	contents, err := afero.ReadDir(x.fs, x.Path())
+	if err != nil {
+		return nil, err
+	}
+
+	files := make([]File, 0, len(contents))
+	for _, content := range contents {
+		if content.IsDir() {
+			continue
+		}
+		files = append(files, FileAtDir(x, content.Name()))
+	}
+	return files, nil
+}
+
 func (x Dir) AssertExists() Dir {
 	if !x.Exists() {
 		panic(fmt.Errorf("dir %s should have existed", x))
